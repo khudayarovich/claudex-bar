@@ -1,0 +1,13 @@
+{
+ "claudeAiOauth": {
+  "accessToken": "sk-ant-oat01-FAKE",
+  "refreshToken": "sk-ant-ort01-FAKE",
+  "expiresAt": 1790300000000,
+  "scopes": [
+   "user:inference",
+   "user:profile"
+  ],
+  "subscriptionType": "max",
+  "rateLimitTier": "default_claude_max_20x"
+ }
+}

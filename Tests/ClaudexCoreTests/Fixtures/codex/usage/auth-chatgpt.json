@@ -1,0 +1,11 @@
+{
+ "auth_mode": "chatgpt",
+ "OPENAI_API_KEY": null,
+ "tokens": {
+  "id_token": "FAKE",
+  "access_token": "eyJhbGciOiAibm9uZSJ9.eyJmYWtlIjogdHJ1ZSwgImV4cCI6IDE3OTA4MDAwMDB9.c2lnbmF0dXJlLUZBS0U",
+  "refresh_token": "rt-FAKE",
+  "account_id": "acct-FAKE"
+ },
+ "last_refresh": "2026-09-19T06:03:28.715073Z"
+}

@@ -1,0 +1,1 @@
+{"pid": 41004, "sessionId": "00000000-0000-4000-8000-000000000004", "cwd": "/Users/test/Projects/cli", "procStart": "Wed Sep  2 08:00:00 2026", "version": "2.1.121", "kind": "interactive", "entrypoint": "cli", "status": "waiting", "waitingFor": "approve Bash: npm test", "updatedAt": 1788336001000}

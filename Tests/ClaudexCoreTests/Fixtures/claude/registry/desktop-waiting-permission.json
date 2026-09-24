@@ -1,0 +1,1 @@
+{"pid": 41002, "sessionId": "00000000-0000-4000-8000-000000000002", "cwd": "/Users/test/Projects/api", "kind": "interactive", "entrypoint": "claude-desktop", "status": "waiting", "waitingFor": "permission prompt", "statusUpdatedAt": 1790103790000, "procStart": "Tue Sep 22 19:03:03 2026"}

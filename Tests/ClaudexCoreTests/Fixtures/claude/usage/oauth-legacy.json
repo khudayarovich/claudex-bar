@@ -1,0 +1,19 @@
+{
+ "five_hour": {
+  "utilization": 9.0,
+  "resets_at": "2026-09-25T04:09:59Z"
+ },
+ "seven_day": {
+  "utilization": 16.0,
+  "resets_at": "2026-09-30T00:00:00.000000+00:00"
+ },
+ "seven_day_opus": null,
+ "seven_day_sonnet": {
+  "utilization": 2.0,
+  "resets_at": "2026-09-30T00:00:00Z"
+ },
+ "seven_day_oauth_apps": null,
+ "extra_usage": {
+  "is_enabled": false
+ }
+}

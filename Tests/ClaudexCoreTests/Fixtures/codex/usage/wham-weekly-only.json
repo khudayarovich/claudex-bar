@@ -1,0 +1,38 @@
+{
+ "account_id": "acct-FAKE",
+ "email": "test@example.com",
+ "user_id": "user-FAKE",
+ "plan_type": "prolite",
+ "rate_limit": {
+  "allowed": true,
+  "limit_reached": false,
+  "primary_window": {
+   "used_percent": 62,
+   "limit_window_seconds": 604800,
+   "reset_after_seconds": 143271,
+   "reset_at": 1790431976
+  },
+  "secondary_window": null
+ },
+ "rate_limit_reached_type": null,
+ "credits": {
+  "has_credits": false,
+  "unlimited": false,
+  "balance": "0",
+  "approx_local_messages": [
+   0,
+   0
+  ],
+  "approx_cloud_messages": [
+   0,
+   0
+  ],
+  "overage_limit_reached": false
+ },
+ "additional_rate_limits": [],
+ "code_review_rate_limit": null,
+ "model_usage": null,
+ "promo": null,
+ "spend_control": null,
+ "rate_limit_reset_credits": null
+}

@@ -1,0 +1,47 @@
+{
+ "id": 2,
+ "result": {
+  "ordinaryUsageAllowed": true,
+  "rateLimits": {
+   "limitId": "codex",
+   "limitName": null,
+   "normalModelSlug": null,
+   "primary": {
+    "usedPercent": 62,
+    "windowDurationMins": 10080,
+    "resetsAt": 1790431976
+   },
+   "secondary": null,
+   "credits": null,
+   "individualLimit": null,
+   "spendControlReached": null,
+   "planType": "prolite",
+   "rateLimitReachedType": null
+  },
+  "rateLimitsByLimitId": {
+   "codex": {
+    "limitId": "codex",
+    "primary": {
+     "usedPercent": 63,
+     "windowDurationMins": 10080,
+     "resetsAt": 1790431976
+    },
+    "secondary": null,
+    "planType": "prolite",
+    "rateLimitReachedType": null
+   },
+   "codex_bengalfox": {
+    "limitId": "codex_bengalfox",
+    "primary": {
+     "usedPercent": 3,
+     "windowDurationMins": 10080,
+     "resetsAt": 1790431976
+    },
+    "secondary": null
+   }
+  },
+  "rateLimitResetCredits": null,
+  "accountId": null,
+  "rateLimitUpsell": null
+ }
+}
