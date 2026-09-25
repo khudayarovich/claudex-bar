@@ -8,6 +8,8 @@
 	<string>ClaudexBar</string>
 	<key>CFBundleExecutable</key>
 	<string>ClaudexBar</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>dev.claudexbar.ClaudexBar</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -26,6 +28,8 @@
 	<string>14.0</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2026 Farrukh Yuldashev</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSPrincipalClass</key>

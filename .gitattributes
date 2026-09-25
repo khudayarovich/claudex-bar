@@ -1,0 +1,3 @@
+# Keep fixtures byte-identical on every platform (no CRLF conversion).
+Tests/ClaudexCoreTests/Fixtures/** -text
+*.sh text eol=lf

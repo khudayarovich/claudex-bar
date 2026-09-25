@@ -115,6 +115,10 @@ final class IslandWindowController {
         let id = transitionID
         // 1. Grow the window first (extra area is transparent) so the animation is never clipped.
         setCanvas(model.layout.canvas.union(target.canvas), hover: target.hoverRect)
+        // Commit the island's re-centering in the larger window *now*, without animation.
+        // Otherwise SwiftUI folds that position change into the spring below and the island
+        // slides in from the window's new left edge instead of spreading out from the notch.
+        container.layoutSubtreeIfNeeded()
         // 2. Morph the island.
         withAnimation(animation(to: mode), completionCriteria: .logicallyComplete) {
             model.mode = mode

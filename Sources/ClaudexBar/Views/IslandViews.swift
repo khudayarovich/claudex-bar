@@ -30,9 +30,9 @@ struct EarView: View {
             HStack(spacing: 8) {
                 if side == .left {
                     glyph
-                    if expanded { labels(alignment: .leading).transition(.opacity) }
+                    if expanded { labels(alignment: .leading).transition(Self.labelTransition) }
                 } else {
-                    if expanded { labels(alignment: .trailing).transition(.opacity) }
+                    if expanded { labels(alignment: .trailing).transition(Self.labelTransition) }
                     glyph
                 }
             }
@@ -45,6 +45,13 @@ struct EarView: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(summary.accessibility)
     }
+
+    /// Labels appear once the band has mostly spread out (so they never overlap the glyph or
+    /// get clipped by the still-growing island) and vanish quickly on collapse.
+    static let labelTransition = AnyTransition.asymmetric(
+        insertion: .opacity.animation(.easeOut(duration: 0.2).delay(0.16)),
+        removal: .opacity.animation(.easeIn(duration: 0.08))
+    )
 
     private var glyph: some View {
         GlyphWithRing(provider: summary.provider, fraction: summary.ring, level: summary.ringLevel,

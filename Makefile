@@ -48,3 +48,27 @@ probe:
 
 clean:
 	rm -rf build .build
+
+VERSION := $(shell tr -d '[:space:]' < VERSION)
+DOTNET  ?= $(shell command -v dotnet || echo $(HOME)/.dotnet/dotnet)
+
+.PHONY: release-mac release-windows test-windows icons
+
+icons:
+	swift Scripts/make-icons.swift $(CURDIR)
+
+release-mac:
+	@UNIVERSAL=1 Scripts/build-app.sh
+	@mkdir -p dist && rm -f dist/ClaudexBar-$(VERSION)-macOS-universal.zip
+	ditto -c -k --keepParent $(APP) dist/ClaudexBar-$(VERSION)-macOS-universal.zip
+
+test-windows:
+	$(DOTNET) test windows/tests/ClaudexBar.Core.Tests/ClaudexBar.Core.Tests.csproj
+
+release-windows:
+	@mkdir -p dist
+	for rid in win-x64 win-arm64; do \
+	  $(DOTNET) publish windows/src/ClaudexBar.App/ClaudexBar.App.csproj -c Release -r $$rid -o build/windows/$$rid || exit 1; \
+	  rm -f dist/ClaudexBar-$(VERSION)-windows-$${rid#win-}.zip; \
+	  (cd build/windows/$$rid && zip -q -9 ../../../dist/ClaudexBar-$(VERSION)-windows-$${rid#win-}.zip ClaudexBar.exe); \
+	done

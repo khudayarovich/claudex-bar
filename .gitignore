@@ -1,6 +1,10 @@
 .build/
 build/
+dist/
 .swiftpm/
 *.xcodeproj
 xcuserdata/
 .DS_Store
+bin/
+obj/
+*.user

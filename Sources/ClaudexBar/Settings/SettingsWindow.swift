@@ -130,8 +130,12 @@ struct SettingsView: View {
                 Text("ClaudexBar").font(.title2.weight(.semibold))
                 Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "dev")")
                     .foregroundStyle(.secondary)
+                Text("by Farrukh Yuldashev")
+                    .font(.body.weight(.medium))
                 Text("Live status and usage limits for Claude Code and Codex, around your notch.")
                     .font(.callout).multilineTextAlignment(.center).foregroundStyle(.secondary)
+                Text("Not affiliated with Anthropic or OpenAI.")
+                    .font(.caption).foregroundStyle(.tertiary)
             }
             .padding(24)
             .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  macos:
+    name: macOS app (Swift)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift --version
+      - run: swift build
+      - run: swift test
+
+  windows:
+    name: Windows app (.NET)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test windows/tests/ClaudexBar.Core.Tests/ClaudexBar.Core.Tests.csproj -c Release
+      - run: dotnet build windows/src/ClaudexBar.App/ClaudexBar.App.csproj -c Release
