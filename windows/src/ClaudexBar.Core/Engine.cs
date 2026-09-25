@@ -500,7 +500,7 @@ public sealed class ClaudeUsageProvider : IDisposable
     private ClaudeUsageReading? _api, _cache;
     private FileStat? _cacheStat, _accountStat, _credStat;
     private ClaudeCredential? _credential;
-    private string? _organization, _plan, _problem;
+    private string? _organization, _plan, _problem, _cachePath;
     private readonly BackoffPolicy _backoff = new();
     private DateTimeOffset _nextAttempt = DateTimeOffset.MinValue, _lastAttempt = DateTimeOffset.MinValue;
     private int? _parkedFingerprint;
@@ -545,11 +545,12 @@ public sealed class ClaudeUsageProvider : IDisposable
             _organization = acct.Str("organizationUuid");
             _plan ??= ClaudeUsageParser.PlanLabel(acct.Str("organizationType"), acct.Str("organizationRateLimitTier"));
         }
-        var st = FileReading.Stat(_paths.PlanUsageHistory);
-        if (st is null) { _cache = null; _cacheStat = null; return; }
-        if (st == _cacheStat) return;
-        _cacheStat = st;
-        _cache = FileReading.ReadAll(_paths.PlanUsageHistory, 4 << 20) is { } data ? ClaudeUsageParser.ParseDesktopCache(data, _organization) : null;
+        var path = _paths.FindPlanUsageHistory();
+        var st = path is null ? null : FileReading.Stat(path);
+        if (st is null) { _cache = null; _cacheStat = null; _cachePath = null; return; }
+        if (st == _cacheStat && path == _cachePath) return;
+        (_cacheStat, _cachePath) = (st, path);
+        _cache = FileReading.ReadAll(path!, 4 << 20) is { } data ? ClaudeUsageParser.ParseDesktopCache(data, _organization) : null;
     }
 
     private async Task FetchApiAsync(DateTimeOffset now)
@@ -563,7 +564,12 @@ public sealed class ClaudeUsageProvider : IDisposable
             _credential = FileReading.ReadAll(_paths.CredentialsFile, 64 * 1024) is { } raw ? ClaudeCredential.Parse(raw) : null;
             _parkedFingerprint = null;
         }
-        if (_credential is null) { _problem = "Claude Code login not found"; return; }
+        if (_credential is null)
+        {
+            // Claude Code inside the Claude app signs in through the app and keeps no login file.
+            _problem = _paths.DesktopAppPresent ? "Waiting for the Claude app's usage numbers" : "Claude Code login not found";
+            return;
+        }
         if (_parkedFingerprint == _credential.Token.Fingerprint) return;
         if (!_credential.IsUsable(now)) { _problem = "Claude Code login expired — using the Claude app's numbers"; return; }
         if (ClaudeUsageParser.PlanLabel(_credential.SubscriptionType, _credential.RateLimitTier) is { } p) _plan = p;

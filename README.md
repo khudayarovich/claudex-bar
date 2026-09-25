@@ -162,7 +162,7 @@ ClaudexBar reads the files Claude Code and Codex already keep up to date on your
 | Claude usage | Anthropic's usage endpoint, `api.anthropic.com/api/oauth/usage`, with Claude Code's saved login (the macOS Keychain, or `~/.claude/.credentials.json`) while that login holds a valid token. Otherwise, the numbers the Claude desktop app saved in its `plan-usage-history.json` |
 | Codex usage | ChatGPT's usage endpoint, `chatgpt.com/backend-api/wham/usage`, with the login in `~/.codex/auth.json`. Otherwise, the rate limits Codex writes into its session logs. On macOS, if the endpoint can't be used and Codex isn't running, ClaudexBar may start a short-lived read-only `codex app-server` to ask, at most every 30 minutes |
 
-`CLAUDE_CONFIG_DIR` and `CODEX_HOME` are respected. On Windows, `~` is your user folder, and the Claude app's data is in `%APPDATA%\Claude`.
+`CLAUDE_CONFIG_DIR` and `CODEX_HOME` are respected. On Windows, `~` is your user folder, and the Claude app's data is in `%APPDATA%\Claude`, or in its package folder under `%LOCALAPPDATA%\Packages` when the app is the Microsoft Store (MSIX) version.
 
 Usage is refreshed every 3 minutes for Claude and every 5 for Codex while that agent has sessions, and every 10 and 15 minutes otherwise. `Retry-After` and back-off are honored, and **Refresh now** asks right away. Limit windows are named by their length (**5h**, **Weekly**), whatever the service calls them internally.
 

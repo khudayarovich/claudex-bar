@@ -517,6 +517,72 @@ public class SourceIntegrationTests
     }
 }
 
+public class ClaudeDesktopDataTests
+{
+    private static readonly string[] Tail = ["LocalCache", "Roaming", "Claude"];
+
+    [Fact]
+    public void FindsTheClaudeAppsMsixPackages()
+    {
+        using var dir = new TempDir();
+        foreach (var name in new[] { "Claude_abcdefghijklm", "Contoso.Claude_0123456789abc", "Claude-3p_abcdefghijklm", "Microsoft.WindowsCalculator_8wekyb3d8bbwe" })
+            Directory.CreateDirectory(Path.Combine(dir.Path, name));
+        var folders = ClaudePaths.MsixDesktopSupport(dir.Path);
+        Assert.All(folders, f => Assert.EndsWith(Path.Combine(Tail), f));
+        Assert.Equal(
+            ["AnthropicPBC.Claude_fnn82j28hfe8t", "Claude_abcdefghijklm", "Claude_pzs8sxrjxfjjc", "Contoso.Claude_0123456789abc"],
+            folders.Select(f => Path.GetRelativePath(dir.Path, f).Split(Path.DirectorySeparatorChar)[0]).Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task ReadsUsageFromAnMsixInstallOfTheClaudeApp()
+    {
+        using var dir = new TempDir();
+        var appData = Path.Combine(dir.Path, "Roaming", "Claude");   // nothing lands here: MSIX redirects it
+        var package = Path.Combine([dir.Path, "Packages", "Claude_pzs8sxrjxfjjc", .. Tail]);
+        Directory.CreateDirectory(appData);
+        var cache = dir.Write(Path.Combine(package, "plan-usage-history.json"), Fx.Text("claude/usage/plan-usage-history-v2.json"));
+        dir.Write(".claude.json", "{\"oauthAccount\":{\"organizationUuid\":\"org-A\"}}");
+        var paths = new ClaudePaths(Path.Combine(dir.Path, ".claude"), appData, Path.Combine(dir.Path, ".claude.json"))
+        {
+            AlternateDesktopSupport = [package],
+        };
+        Assert.Equal(cache, paths.FindPlanUsageHistory());
+
+        using var provider = new ClaudeUsageProvider(paths, new NoHttp()) { UseApi = false };
+        ProviderUsage? last = null;
+        provider.Changed += u => last = u;
+        await provider.RefreshAsync(true);
+        Assert.NotEmpty(last!.Windows);
+        Assert.NotEqual(UsageStatusKind.Unavailable, last.Status.Kind);
+    }
+
+    [Fact]
+    public async Task ExplainsMissingClaudeUsage()
+    {
+        using var dir = new TempDir();
+        var appData = Path.Combine(dir.Path, "Claude");
+        var paths = new ClaudePaths(Path.Combine(dir.Path, ".claude"), appData, Path.Combine(dir.Path, ".claude.json"));
+        async Task<string?> Reason()
+        {
+            using var provider = new ClaudeUsageProvider(paths, new NoHttp());
+            ProviderUsage? last = null;
+            provider.Changed += u => last = u;
+            await provider.RefreshAsync(true);
+            return last!.Status.Reason;
+        }
+        Assert.Equal("Claude Code login not found", await Reason());
+        Directory.CreateDirectory(appData);   // the Claude app is installed but hasn't saved usage yet
+        Assert.Equal("Waiting for the Claude app's usage numbers", await Reason());
+    }
+
+    private sealed class NoHttp : IHttp
+    {
+        public Task<HttpResult?> GetAsync(Uri url, IReadOnlyDictionary<string, string> headers, TimeSpan timeout, CancellationToken ct = default) =>
+            throw new InvalidOperationException("no network in tests");
+    }
+}
+
 public class PlatformTests
 {
     [Fact]

@@ -364,7 +364,10 @@ public actor ClaudeUsageProvider {
         lastAPIAttempt = now
         let (credential, changed) = await credentials.current()
         guard let credential else {
-            apiProblem = "Claude Code login not found"
+            // Claude Code inside the Claude app signs in through the app and keeps no login of its own.
+            apiProblem = fs.stat(paths.desktopSupport)?.isDirectory == true
+                ? "Waiting for the Claude app's usage numbers"
+                : "Claude Code login not found"
             return
         }
         if changed { parkedFingerprint = nil }

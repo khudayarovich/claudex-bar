@@ -4,6 +4,10 @@ namespace ClaudexBar.Core;
 
 public sealed record ClaudePaths(string Home, string DesktopSupport, string AccountFile)
 {
+    /// <summary>Other folders that may hold the Claude app's data. A Store/MSIX install of the app has
+    /// its AppData writes redirected into the package's private LocalCache.</summary>
+    public IReadOnlyList<string> AlternateDesktopSupport { get; init; } = [];
+
     public static ClaudePaths Standard()
     {
         var user = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -11,13 +15,54 @@ public sealed record ClaudePaths(string Home, string DesktopSupport, string Acco
         string desktop = OperatingSystem.IsWindows()
             ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Claude")
             : Path.Combine(user, "Library", "Application Support", "Claude");
-        return new ClaudePaths(home, desktop, Path.Combine(user, ".claude.json"));
+        return new ClaudePaths(home, desktop, Path.Combine(user, ".claude.json"))
+        {
+            AlternateDesktopSupport = OperatingSystem.IsWindows()
+                ? MsixDesktopSupport(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages"))
+                : [],
+        };
+    }
+
+    /// <summary>Roaming data folders of the Claude app's MSIX packages (the two package families the app
+    /// ships as, plus any other <c>…Claude_&lt;publisher id&gt;</c> package found).</summary>
+    public static IReadOnlyList<string> MsixDesktopSupport(string packagesDir)
+    {
+        var names = new List<string> { "Claude_pzs8sxrjxfjjc", "AnthropicPBC.Claude_fnn82j28hfe8t" };
+        foreach (var name in FileReading.List(packagesDir))
+            if (IsClaudePackage(name) && !names.Contains(name, StringComparer.OrdinalIgnoreCase)) names.Add(name);
+        return names.Select(n => Path.Combine(packagesDir, n, "LocalCache", "Roaming", "Claude")).ToList();
+    }
+
+    private static bool IsClaudePackage(string name)
+    {
+        int us = name.LastIndexOf('_');
+        if (us < 0 || name.Length - us - 1 != 13) return false;
+        var family = name[..us];
+        return family.Equals("Claude", StringComparison.OrdinalIgnoreCase)
+               || family.EndsWith(".Claude", StringComparison.OrdinalIgnoreCase);
     }
 
     public string SessionsDir => Path.Combine(Home, "sessions");
     public string ProjectsDir => Path.Combine(Home, "projects");
     public string CredentialsFile => Path.Combine(Home, ".credentials.json");
     public string PlanUsageHistory => Path.Combine(DesktopSupport, "plan-usage-history.json");
+
+    /// <summary>The newest plan-usage-history.json among the Claude app's data folders, if any.</summary>
+    public string? FindPlanUsageHistory()
+    {
+        string? best = null;
+        DateTimeOffset bestModified = DateTimeOffset.MinValue;
+        foreach (var dir in AlternateDesktopSupport.Prepend(DesktopSupport))
+        {
+            var path = Path.Combine(dir, "plan-usage-history.json");
+            if (FileReading.Stat(path) is { IsDirectory: false } st && (best is null || st.Modified > bestModified))
+                (best, bestModified) = (path, st.Modified);
+        }
+        return best;
+    }
+
+    /// <summary>Whether the Claude app appears to be installed (any of its data folders exists).</summary>
+    public bool DesktopAppPresent => AlternateDesktopSupport.Prepend(DesktopSupport).Any(Directory.Exists);
 }
 
 // MARK: - Registry
