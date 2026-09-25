@@ -106,6 +106,12 @@ jobs:
           VERSION: ${{ needs.plan.outputs.version }}
         run: |
           ls -la dist
+          # A tag left behind by a deleted release would pin this release to that old commit.
+          if tag_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$VERSION" --jq .object.sha 2>/dev/null) \
+             && [ "$tag_sha" != "$GITHUB_SHA" ]; then
+            echo "Replacing leftover tag v$VERSION (was $tag_sha)"
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/tags/v$VERSION"
+          fi
           gh release create "v$VERSION" dist/*.zip \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
             --title "ClaudexBar $VERSION" --notes-file .github/release-notes.md
