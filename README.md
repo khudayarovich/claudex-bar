@@ -13,6 +13,7 @@ See at a glance which agent is working, which one is done, and which one is wait
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey)](https://github.com/khudayarovich/claudex-bar/releases/latest)
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-ffdd00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/khudayarovich)
+[![Sponsor](https://img.shields.io/badge/Sponsor-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/khudayarovich)
 
 <img src="docs/mac-expanded-mixed.png" alt="The ClaudexBar island opened under the MacBook notch: usage limits for Claude and Codex, and four sessions with their traffic lights" width="900">
 
@@ -121,7 +122,7 @@ On macOS, open Settings from the right-click menu or the gear in the panel. On W
 
 ## Support the project
 
-ClaudexBar is free, MIT-licensed, and built in the open by one person. It has no paid tier and collects nothing from you. If it saves you a few window switches a day, a coffee keeps it maintained.
+ClaudexBar is free, MIT-licensed, and built in the open by one person. It has no paid tier and collects nothing from you. If it saves you a few window switches a day, a sponsorship or a coffee keeps it maintained.
 
 <table>
 <tr>
@@ -131,12 +132,14 @@ ClaudexBar is free, MIT-licensed, and built in the open by one person. It has no
 
 - ⭐ **Star the repository**: free, and the single biggest help
 - 🐛 **Report a bug** or suggest a feature in [Issues](https://github.com/khudayarovich/claudex-bar/issues)
-- ☕ **Buy me a coffee** if ClaudexBar earns a place on your screen
+- 💛 **Sponsor** or ☕ **buy me a coffee** if ClaudexBar earns a place on your screen
 
 </td>
 <td width="40%" valign="top">
 
 **Donate**
+
+<a href="https://github.com/sponsors/khudayarovich"><img src="https://img.shields.io/badge/Sponsor-ea4aaa?style=for-the-badge&logo=githubsponsors&logoColor=white" alt="Sponsor on GitHub" /></a>
 
 <a href="https://buymeacoffee.com/khudayarovich"><img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-ffdd00?style=for-the-badge&logo=buymeacoffee&logoColor=black" alt="Buy me a coffee" /></a>
 
